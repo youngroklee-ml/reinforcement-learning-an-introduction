@@ -1,0 +1,18 @@
+--- 
+title: "R scripts for Sutton & Barto's book Reinforcement Learning: An Introduction (2nd Edition)"
+author: "Youngrok Lee"
+date: "`r Sys.Date()`"
+site: bookdown::bookdown_site
+documentclass: book
+bibliography: [book.bib]
+biblio-style: apalike
+link-citations: yes
+description: "This is R script that reproduces ShangtongZhang's Python code for Sutton & Barto's book Reinforcement Learning: An Introduction (2nd Edition)"
+---
+
+# Preface {-}
+
+This is R script that reproduces [ShangtongZhang's Python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter01/tic_tac_toe.py) for Sutton & Barto's book Reinforcement Learning: An Introduction [@sutton2018reinforcement]
+
+
+

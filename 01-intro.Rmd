@@ -1,0 +1,403 @@
+# Introduction {#intro}
+
+```{r}
+library(tidyverse)
+```
+
+
+## Example: Tic-Tac_Toe
+
+Python code exists [here](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter01/tic_tac_toe.py) with the following copyright statement.
+
+```
+#######################################################################
+# Copyright (C)                                                       #
+# 2016 - 2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)           #
+# 2016 Jan Hakenberg(jan.hakenberg@gmail.com)                         #
+# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
+# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
+# Permission given to modify the code as long as you keep this        #
+# declaration at the top                                              #
+#######################################################################
+```
+
+
+```{r}
+library(R6)
+```
+
+
+Board size:
+
+```{r}
+n <- 3
+```
+
+
+Define `State` class:
+
+```{r}
+State <- R6Class("State", list(
+    # the board is represented by an n * n array,
+    # 1 represents a chessman of the player who moves first,
+    # -1 represents a chessman of another player
+    # 0 represents an empty position
+    data = matrix(0L, nrow = n, ncol = n),
+    winner = NA_integer_,
+    hash_val = NA_integer_,
+    end = NA_integer_,
+    # compute the hash value for one state, it's unique
+    hash = function(...) {
+        if (is.na(self$hash_val)) {
+            self$hash_val <- 0L
+            for (i in self$data) {
+                if (i == -1L) i <- 2L
+                self$hash_val <- self$hash_val * 3L + i
+            }
+        }
+        invisible(self$hash_val)
+    },
+    # check whether a player has won the game, or it's a tie
+    is_end = function(...) {
+        if (!is.na(self$end)) invisible(self$end)
+        
+        results <- c(
+            # check row
+            rowSums(self$data),
+            # check columns
+            colSums(self$data),
+            # check diagonals
+            sum(diag(self$data)),
+            sum(diag(self$data[, rev(seq_len(n))]))
+        )
+        
+        if (any(results == n)) {
+            self$winner <- 1L
+            self$end <- TRUE
+        } else if (any(results == -n)) {
+            self$winner <- -1L
+            self$end <- TRUE
+        } else if (all(self$data != 0)) { # whether it's a tie
+            self$winner <- 0L
+            self$end <- TRUE
+        } else {
+            # game is still going on
+            self$end = FALSE
+        }
+
+        invisible(self$end)
+    },
+    # @symbol: 1 or -1
+    # put chessman symbol in position (i, j)
+    next_state = function (i, j, symbol) {
+        new_state <- State$new()
+        new_state$data <- self$data
+        new_state$data[i, j] <- symbol
+        invisible(new_state)
+    },
+    # print the board
+    print_state = function(...) {
+        for (i in seq_len(n)) {
+            cat("-------------\n")
+            symbols <- c("x", "0", "*")[self$data[i, ] + 2L]
+            cat(str_c("| ", str_c(symbols, collapse = " | "), " |\n"))
+        }
+        cat("-------------\n")
+    },
+    # print message
+    print = function(...) {
+        cat("State class object\n")
+    }
+
+))
+```
+
+
+```{r}
+State$new()$print_state()
+```
+
+Generate all possible `State` objects, and store them as objects in `environment`:
+
+```{r}
+get_all_states_impl <- function (current_state, current_symbol, all_states) {
+    for (i in seq_len(n)) {
+        for (j in seq_len(n)) {
+            if (current_state$data[i, j] == 0) {
+                new_state <- current_state$next_state(i, j, current_symbol)
+                new_hash <- new_state$hash()
+                hash_str <- as.character(new_hash)
+                if (!hash_str %in% rlang::env_names(all_states)) {
+                    is_end <- new_state$is_end()
+                    all_states[[hash_str]] <- list(
+                        state = new_state, end = is_end
+                        )
+                    if (!is_end) {
+                        get_all_states_impl(new_state, -current_symbol, all_states)
+                    }
+                }
+            }
+        }
+    }
+}
+```
+
+```{r}
+get_all_states <- function () {
+    current_symbol <- 1L
+    current_state <- State$new()
+    
+    all_states <- new.env()
+    hash_str <- as.character(current_state$hash())
+    all_states[[hash_str]] <- list(
+        state = current_state,
+        end = current_state$is_end()
+    )
+    
+    get_all_states_impl(current_state, current_symbol, all_states)
+
+    invisible(all_states)
+}
+```
+
+```{r}
+# all possible board configurations
+all_states <- get_all_states()
+max_hash <- max(as.integer(rlang::env_names(all_states)))
+```
+
+
+Define `Judger` class:
+
+```{r}
+Judger <- R6Class("Judger", list(
+    # @player1: the player who will move first, its chessman will be 1
+    # @player2: another player with a chessman -1
+    i = 0L,
+    players = vector("list", length = 2),
+    player_symbols = rep(NA_integer_, 2),
+    current_state = NULL,
+    initialize = function (player1, player2) {
+        self$players[[1]] <- player1
+        self$players[[2]] <- player2
+        self$player_symbols[1] <- 1L
+        self$player_symbols[2] <- -1L
+        walk2(self$players, self$player_symbols,
+              ~ .x$set_symbol(.y))
+        self$current_state <- State$new()
+    },
+    reset = function () {
+        walk(self$players, ~ .x$reset())
+        self$i <- 0L
+    },
+    alternate = function() {
+        self$i <- (self$i + 1L) %% 2L
+        invisible(self$players[[2L - self$i]])
+    },
+    play = function (print_state = FALSE) {
+        self$reset()
+        current_state <- State$new()
+        walk(self$players, ~ .x$set_state(current_state))
+        while(TRUE) {
+            player <- self$alternate()
+            
+            # debug
+            # cat("current hash: ", as.character(current_state$hash()), "\n")
+
+            
+            if (print_state) {
+                current_state$print_state()
+            }
+            
+            i_j_symbol <- player$act()
+            
+            # debug
+            # cat("i: ", i_j_symbol[1], "j: ", i_j_symbol[2], "symbol: ", i_j_symbol[3], "\n")
+            
+            next_state_hash <- current_state$next_state(
+                i_j_symbol[1],
+                i_j_symbol[2],
+                i_j_symbol[3]
+            )$hash() %>%
+                as.character()
+            
+            # debug
+            # cat("next hash: ", next_state_hash, "\n")
+            
+            current_state <- all_states[[next_state_hash]]$state
+            is_end <- all_states[[next_state_hash]]$end
+            walk(self$players, ~ .x$set_state(current_state))
+            
+            if (is_end) {
+                # debug
+                # cat("play end\n")
+                if (print_state) {
+                    current_state$print_state()
+                }
+                # invisible(current_state$winner)
+                return(current_state$winner)
+            }
+        }
+    }
+))
+```
+
+
+Define `Player` class that is AI player:
+
+```{r}
+# AI player
+Player <- R6Class("Player", list(
+    estimations = NULL,
+    step_size = NA_real_,
+    epsilon = NA_real_,
+    states = NULL,
+    greedy = NULL,
+    symbol = NA_integer_,
+    initialize = function (step_size = 0.1, epsilon = 0.1) {
+        self$estimations <- rep(0, max_hash)
+        self$step_size <- step_size
+        self$epsilon <- epsilon
+        self$states <- list()
+        self$greedy <- list()
+    },
+    reset = function () {
+        self$states <- list()
+        self$greedy <- list()
+    },
+    set_state = function (state) {
+        self$states[[length(self$states) + 1]] <- state
+        self$greedy[[length(self$greedy) + 1]] <- TRUE
+    },
+    set_symbol = function (symbol) {
+        self$symbol <- symbol
+        for (hash_val in rlang::env_names(all_states)) {
+            state <- all_states[[hash_val]]$state
+            is_end <- all_states[[hash_val]]$end
+            hash_val_int <- as.integer(hash_val)
+            if (is_end) {
+                if (state$winner == self$symbol) {
+                    self$estimations[hash_val_int] <- 1.0
+                } else if (state$winner == 0) {
+                    # we need to distinguish between a tie and a lose
+                    self$estimations[hash_val_int] <- 0.5
+                } else {
+                    self$estimations[hash_val_int] <- 0
+                }
+            } else {
+                self$estimations[hash_val_int] <- 0.5
+            }
+        }
+    },
+    # update value estimation
+    backup = function ( ) {
+        # for debug
+        # cat("player trajectory\n")
+        # walk(self$states, ~.x$print_state())
+        self$states <- map_int(self$states, ~ as.integer(.x$hash()))
+        
+        for (i in rev(seq_len(length(self$states) - 1))) {
+            state <- self$states[i]
+            td_error <- self$greedy[[i]] * (self$estimations[self$states[i + 1]] - self$estimations[state])
+            self$estimations[state] <- self$estimations[state] + self$step_size * td_error
+        }
+    },
+    # choose an action based on the state
+    act = function (...) {
+        state <- self$states[[length(self$states)]]
+        # state$print_state()
+        next_states <- list()
+        next_positions <- list()
+        
+        for (i in seq_len(n)) {
+            for (j in seq_len(n)) {
+                if (state$data[i, j] == 0L) {
+                    ind <- length(next_positions) + 1
+                    next_positions[[ind]] <- c(i, j)
+                    next_states[[ind]] <- state$next_state(i, j, self$symbol)$hash()
+                }
+            }
+        }
+        
+        if (runif(1L) < self$epsilon) {
+            action <- c(
+                next_positions[[sample.int(length(next_positions), 1L)]], 
+                self$symbol
+            )
+            self$greedy[[length(self$greedy)]] <- FALSE
+            invisible(action)
+        }
+        
+        values <- map2_dfr(next_states, next_positions,
+            ~ tibble(
+                value = self$estimations[as.integer(.x)],
+                i = .y[1],
+                j = .y[2]
+            )
+        ) %>%
+            sample_n(size = n()) %>%
+            arrange(desc(value)) %>%
+            slice(1)
+        
+        action <- c(
+            c(values$i, values$j),
+            self$symbol
+        )
+        invisible(action)
+    }
+))
+```
+
+Let us check whether a play by two AI players work correctly.
+
+```{r}
+set.seed(900)
+Judger$new(Player$new(), Player$new())$play(print_state = TRUE)
+```
+
+
+Now, let us train players through multiple plays between two AI players.
+
+```{r}
+train <- function(epochs, print_every_n = 500) {
+    player1 <- Player$new(epsilon=0.01)
+    player2 <- Player$new(epsilon=0.01)
+    judger <- Judger$new(player1, player2)
+    player1_win = 0.0
+    player2_win = 0.0
+    player1_win_prev = 0.0
+    player2_win_prev = 0.0
+    for (i in seq_len(epochs)) {
+        winner <- judger$play(print_state = FALSE)
+        if (winner == 1L) {
+            player1_win = player1_win + 1
+        } else if (winner == -1L) {
+            player2_win = player2_win + 1
+        }
+        
+        if (i %% print_every_n == 0) {
+            cat(str_glue(
+                "Epoch {(i %/% print_every_n - 1) * print_every_n + 1} -- {i}, ",
+                "player 1 winrate: {(player1_win - player1_win_prev) / print_every_n}, ", 
+                "player 2 winrate: {(player2_win - player2_win_prev) / print_every_n}"))
+            cat("\n")
+            player1_win_prev <- player1_win
+            player2_win_prev <- player2_win
+        }
+        
+        player1$backup()
+        player2$backup()
+        judger$reset()
+    }
+}
+```
+
+```{r}
+set.seed(900)
+train(1e+3, print_every_n = 100)
+```
+
+It is observed that Player 1 who plays first won more at the beginning, but after two AI players learned from few hundreds plays, the results were mostly tie.
+
+
+

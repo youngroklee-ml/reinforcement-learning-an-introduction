@@ -1,0 +1,1 @@
+This is R script that reproduce [ShangtongZhang's Python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction) for Sutton & Barto's book [Reinforcement Learning: An Introduction (2nd Edition)](http://incompleteideas.net/book/the-book-2nd.html)

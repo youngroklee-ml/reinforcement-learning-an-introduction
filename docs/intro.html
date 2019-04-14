@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 1 Introduction | R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)</title>
+  <meta name="description" content="This is R script that reproduces ShangtongZhang’s Python code for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 1 Introduction | R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is R script that reproduces ShangtongZhang’s Python code for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 1 Introduction | R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  
+  <meta name="twitter:description" content="This is R script that reproduces ShangtongZhang’s Python code for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  
+
+<meta name="author" content="Youngrok Lee">
+
+
+<meta name="date" content="2019-04-14">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="index.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R scripts for Reinforcement Learning: An Introduction</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#example-tic-tac_toe"><i class="fa fa-check"></i><b>1.1</b> Example: Tic-Tac_Toe</a></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="intro" class="section level1">
+<h1><span class="header-section-number">Chapter 1</span> Introduction</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
+<div id="example-tic-tac_toe" class="section level2">
+<h2><span class="header-section-number">1.1</span> Example: Tic-Tac_Toe</h2>
+<p>Python code exists <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter01/tic_tac_toe.py">here</a> with the following copyright statement.</p>
+<pre><code>#######################################################################
+# Copyright (C)                                                       #
+# 2016 - 2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)           #
+# 2016 Jan Hakenberg(jan.hakenberg@gmail.com)                         #
+# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
+# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
+# Permission given to modify the code as long as you keep this        #
+# declaration at the top                                              #
+#######################################################################</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(R6)</code></pre>
+<p>Board size:</p>
+<pre class="sourceCode r"><code class="sourceCode r">n &lt;-<span class="st"> </span><span class="dv">3</span></code></pre>
+<p>Define <code>State</code> class:</p>
+<pre class="sourceCode r"><code class="sourceCode r">State &lt;-<span class="st"> </span><span class="kw">R6Class</span>(<span class="st">&quot;State&quot;</span>, <span class="kw">list</span>(
+    <span class="co"># the board is represented by an n * n array,</span>
+    <span class="co"># 1 represents a chessman of the player who moves first,</span>
+    <span class="co"># -1 represents a chessman of another player</span>
+    <span class="co"># 0 represents an empty position</span>
+    <span class="dt">data =</span> <span class="kw">matrix</span>(0L, <span class="dt">nrow =</span> n, <span class="dt">ncol =</span> n),
+    <span class="dt">winner =</span> <span class="ot">NA_integer_</span>,
+    <span class="dt">hash_val =</span> <span class="ot">NA_integer_</span>,
+    <span class="dt">end =</span> <span class="ot">NA_integer_</span>,
+    <span class="co"># compute the hash value for one state, it&#39;s unique</span>
+    <span class="dt">hash =</span> <span class="cf">function</span>(...) {
+        <span class="cf">if</span> (<span class="kw">is.na</span>(self<span class="op">$</span>hash_val)) {
+            self<span class="op">$</span>hash_val &lt;-<span class="st"> </span>0L
+            <span class="cf">for</span> (i <span class="cf">in</span> self<span class="op">$</span>data) {
+                <span class="cf">if</span> (i <span class="op">==</span><span class="st"> </span><span class="op">-</span>1L) i &lt;-<span class="st"> </span>2L
+                self<span class="op">$</span>hash_val &lt;-<span class="st"> </span>self<span class="op">$</span>hash_val <span class="op">*</span><span class="st"> </span>3L <span class="op">+</span><span class="st"> </span>i
+            }
+        }
+        <span class="kw">invisible</span>(self<span class="op">$</span>hash_val)
+    },
+    <span class="co"># check whether a player has won the game, or it&#39;s a tie</span>
+    <span class="dt">is_end =</span> <span class="cf">function</span>(...) {
+        <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.na</span>(self<span class="op">$</span>end)) <span class="kw">invisible</span>(self<span class="op">$</span>end)
+        
+        results &lt;-<span class="st"> </span><span class="kw">c</span>(
+            <span class="co"># check row</span>
+            <span class="kw">rowSums</span>(self<span class="op">$</span>data),
+            <span class="co"># check columns</span>
+            <span class="kw">colSums</span>(self<span class="op">$</span>data),
+            <span class="co"># check diagonals</span>
+            <span class="kw">sum</span>(<span class="kw">diag</span>(self<span class="op">$</span>data)),
+            <span class="kw">sum</span>(<span class="kw">diag</span>(self<span class="op">$</span>data[, <span class="kw">rev</span>(<span class="kw">seq_len</span>(n))]))
+        )
+        
+        <span class="cf">if</span> (<span class="kw">any</span>(results <span class="op">==</span><span class="st"> </span>n)) {
+            self<span class="op">$</span>winner &lt;-<span class="st"> </span>1L
+            self<span class="op">$</span>end &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+        } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">any</span>(results <span class="op">==</span><span class="st"> </span><span class="op">-</span>n)) {
+            self<span class="op">$</span>winner &lt;-<span class="st"> </span><span class="op">-</span>1L
+            self<span class="op">$</span>end &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+        } <span class="cf">else</span> <span class="cf">if</span> (<span class="kw">all</span>(self<span class="op">$</span>data <span class="op">!=</span><span class="st"> </span><span class="dv">0</span>)) { <span class="co"># whether it&#39;s a tie</span>
+            self<span class="op">$</span>winner &lt;-<span class="st"> </span>0L
+            self<span class="op">$</span>end &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+        } <span class="cf">else</span> {
+            <span class="co"># game is still going on</span>
+            self<span class="op">$</span>end =<span class="st"> </span><span class="ot">FALSE</span>
+        }
+
+        <span class="kw">invisible</span>(self<span class="op">$</span>end)
+    },
+    <span class="co"># @symbol: 1 or -1</span>
+    <span class="co"># put chessman symbol in position (i, j)</span>
+    <span class="dt">next_state =</span> <span class="cf">function</span> (i, j, symbol) {
+        new_state &lt;-<span class="st"> </span>State<span class="op">$</span><span class="kw">new</span>()
+        new_state<span class="op">$</span>data &lt;-<span class="st"> </span>self<span class="op">$</span>data
+        new_state<span class="op">$</span>data[i, j] &lt;-<span class="st"> </span>symbol
+        <span class="kw">invisible</span>(new_state)
+    },
+    <span class="co"># print the board</span>
+    <span class="dt">print_state =</span> <span class="cf">function</span>(...) {
+        <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) {
+            <span class="kw">cat</span>(<span class="st">&quot;-------------</span><span class="ch">\n</span><span class="st">&quot;</span>)
+            symbols &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="st">&quot;x&quot;</span>, <span class="st">&quot;0&quot;</span>, <span class="st">&quot;*&quot;</span>)[self<span class="op">$</span>data[i, ] <span class="op">+</span><span class="st"> </span>2L]
+            <span class="kw">cat</span>(<span class="kw">str_c</span>(<span class="st">&quot;| &quot;</span>, <span class="kw">str_c</span>(symbols, <span class="dt">collapse =</span> <span class="st">&quot; | &quot;</span>), <span class="st">&quot; |</span><span class="ch">\n</span><span class="st">&quot;</span>))
+        }
+        <span class="kw">cat</span>(<span class="st">&quot;-------------</span><span class="ch">\n</span><span class="st">&quot;</span>)
+    },
+    <span class="co"># print message</span>
+    <span class="dt">print =</span> <span class="cf">function</span>(...) {
+        <span class="kw">cat</span>(<span class="st">&quot;State class object</span><span class="ch">\n</span><span class="st">&quot;</span>)
+    }
+
+))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">State<span class="op">$</span><span class="kw">new</span>()<span class="op">$</span><span class="kw">print_state</span>()</code></pre>
+<pre><code>## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------</code></pre>
+<p>Generate all possible <code>State</code> objects, and store them as objects in <code>environment</code>:</p>
+<pre class="sourceCode r"><code class="sourceCode r">get_all_states_impl &lt;-<span class="st"> </span><span class="cf">function</span> (current_state, current_symbol, all_states) {
+    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) {
+        <span class="cf">for</span> (j <span class="cf">in</span> <span class="kw">seq_len</span>(n)) {
+            <span class="cf">if</span> (current_state<span class="op">$</span>data[i, j] <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {
+                new_state &lt;-<span class="st"> </span>current_state<span class="op">$</span><span class="kw">next_state</span>(i, j, current_symbol)
+                new_hash &lt;-<span class="st"> </span>new_state<span class="op">$</span><span class="kw">hash</span>()
+                hash_str &lt;-<span class="st"> </span><span class="kw">as.character</span>(new_hash)
+                <span class="cf">if</span> (<span class="op">!</span>hash_str <span class="op">%in%</span><span class="st"> </span>rlang<span class="op">::</span><span class="kw">env_names</span>(all_states)) {
+                    is_end &lt;-<span class="st"> </span>new_state<span class="op">$</span><span class="kw">is_end</span>()
+                    all_states[[hash_str]] &lt;-<span class="st"> </span><span class="kw">list</span>(
+                        <span class="dt">state =</span> new_state, <span class="dt">end =</span> is_end
+                        )
+                    <span class="cf">if</span> (<span class="op">!</span>is_end) {
+                        <span class="kw">get_all_states_impl</span>(new_state, <span class="op">-</span>current_symbol, all_states)
+                    }
+                }
+            }
+        }
+    }
+}</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">get_all_states &lt;-<span class="st"> </span><span class="cf">function</span> () {
+    current_symbol &lt;-<span class="st"> </span>1L
+    current_state &lt;-<span class="st"> </span>State<span class="op">$</span><span class="kw">new</span>()
+    
+    all_states &lt;-<span class="st"> </span><span class="kw">new.env</span>()
+    hash_str &lt;-<span class="st"> </span><span class="kw">as.character</span>(current_state<span class="op">$</span><span class="kw">hash</span>())
+    all_states[[hash_str]] &lt;-<span class="st"> </span><span class="kw">list</span>(
+        <span class="dt">state =</span> current_state,
+        <span class="dt">end =</span> current_state<span class="op">$</span><span class="kw">is_end</span>()
+    )
+    
+    <span class="kw">get_all_states_impl</span>(current_state, current_symbol, all_states)
+
+    <span class="kw">invisible</span>(all_states)
+}</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># all possible board configurations</span>
+all_states &lt;-<span class="st"> </span><span class="kw">get_all_states</span>()
+max_hash &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="kw">as.integer</span>(rlang<span class="op">::</span><span class="kw">env_names</span>(all_states)))</code></pre>
+<p>Define <code>Judger</code> class:</p>
+<pre class="sourceCode r"><code class="sourceCode r">Judger &lt;-<span class="st"> </span><span class="kw">R6Class</span>(<span class="st">&quot;Judger&quot;</span>, <span class="kw">list</span>(
+    <span class="co"># @player1: the player who will move first, its chessman will be 1</span>
+    <span class="co"># @player2: another player with a chessman -1</span>
+    <span class="dt">i =</span> 0L,
+    <span class="dt">players =</span> <span class="kw">vector</span>(<span class="st">&quot;list&quot;</span>, <span class="dt">length =</span> <span class="dv">2</span>),
+    <span class="dt">player_symbols =</span> <span class="kw">rep</span>(<span class="ot">NA_integer_</span>, <span class="dv">2</span>),
+    <span class="dt">current_state =</span> <span class="ot">NULL</span>,
+    <span class="dt">initialize =</span> <span class="cf">function</span> (player1, player2) {
+        self<span class="op">$</span>players[[<span class="dv">1</span>]] &lt;-<span class="st"> </span>player1
+        self<span class="op">$</span>players[[<span class="dv">2</span>]] &lt;-<span class="st"> </span>player2
+        self<span class="op">$</span>player_symbols[<span class="dv">1</span>] &lt;-<span class="st"> </span>1L
+        self<span class="op">$</span>player_symbols[<span class="dv">2</span>] &lt;-<span class="st"> </span><span class="op">-</span>1L
+        <span class="kw">walk2</span>(self<span class="op">$</span>players, self<span class="op">$</span>player_symbols,
+              <span class="op">~</span><span class="st"> </span>.x<span class="op">$</span><span class="kw">set_symbol</span>(.y))
+        self<span class="op">$</span>current_state &lt;-<span class="st"> </span>State<span class="op">$</span><span class="kw">new</span>()
+    },
+    <span class="dt">reset =</span> <span class="cf">function</span> () {
+        <span class="kw">walk</span>(self<span class="op">$</span>players, <span class="op">~</span><span class="st"> </span>.x<span class="op">$</span><span class="kw">reset</span>())
+        self<span class="op">$</span>i &lt;-<span class="st"> </span>0L
+    },
+    <span class="dt">alternate =</span> <span class="cf">function</span>() {
+        self<span class="op">$</span>i &lt;-<span class="st"> </span>(self<span class="op">$</span>i <span class="op">+</span><span class="st"> </span>1L) <span class="op">%%</span><span class="st"> </span>2L
+        <span class="kw">invisible</span>(self<span class="op">$</span>players[[2L <span class="op">-</span><span class="st"> </span>self<span class="op">$</span>i]])
+    },
+    <span class="dt">play =</span> <span class="cf">function</span> (<span class="dt">print_state =</span> <span class="ot">FALSE</span>) {
+        self<span class="op">$</span><span class="kw">reset</span>()
+        current_state &lt;-<span class="st"> </span>State<span class="op">$</span><span class="kw">new</span>()
+        <span class="kw">walk</span>(self<span class="op">$</span>players, <span class="op">~</span><span class="st"> </span>.x<span class="op">$</span><span class="kw">set_state</span>(current_state))
+        <span class="cf">while</span>(<span class="ot">TRUE</span>) {
+            player &lt;-<span class="st"> </span>self<span class="op">$</span><span class="kw">alternate</span>()
+            
+            <span class="co"># debug</span>
+            <span class="co"># cat(&quot;current hash: &quot;, as.character(current_state$hash()), &quot;\n&quot;)</span>
+
+            
+            <span class="cf">if</span> (print_state) {
+                current_state<span class="op">$</span><span class="kw">print_state</span>()
+            }
+            
+            i_j_symbol &lt;-<span class="st"> </span>player<span class="op">$</span><span class="kw">act</span>()
+            
+            <span class="co"># debug</span>
+            <span class="co"># cat(&quot;i: &quot;, i_j_symbol[1], &quot;j: &quot;, i_j_symbol[2], &quot;symbol: &quot;, i_j_symbol[3], &quot;\n&quot;)</span>
+            
+            next_state_hash &lt;-<span class="st"> </span>current_state<span class="op">$</span><span class="kw">next_state</span>(
+                i_j_symbol[<span class="dv">1</span>],
+                i_j_symbol[<span class="dv">2</span>],
+                i_j_symbol[<span class="dv">3</span>]
+            )<span class="op">$</span><span class="kw">hash</span>() <span class="op">%&gt;%</span>
+<span class="st">                </span><span class="kw">as.character</span>()
+            
+            <span class="co"># debug</span>
+            <span class="co"># cat(&quot;next hash: &quot;, next_state_hash, &quot;\n&quot;)</span>
+            
+            current_state &lt;-<span class="st"> </span>all_states[[next_state_hash]]<span class="op">$</span>state
+            is_end &lt;-<span class="st"> </span>all_states[[next_state_hash]]<span class="op">$</span>end
+            <span class="kw">walk</span>(self<span class="op">$</span>players, <span class="op">~</span><span class="st"> </span>.x<span class="op">$</span><span class="kw">set_state</span>(current_state))
+            
+            <span class="cf">if</span> (is_end) {
+                <span class="co"># debug</span>
+                <span class="co"># cat(&quot;play end\n&quot;)</span>
+                <span class="cf">if</span> (print_state) {
+                    current_state<span class="op">$</span><span class="kw">print_state</span>()
+                }
+                <span class="co"># invisible(current_state$winner)</span>
+                <span class="kw">return</span>(current_state<span class="op">$</span>winner)
+            }
+        }
+    }
+))</code></pre>
+<p>Define <code>Player</code> class that is AI player:</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="co"># AI player</span>
+Player &lt;-<span class="st"> </span><span class="kw">R6Class</span>(<span class="st">&quot;Player&quot;</span>, <span class="kw">list</span>(
+    <span class="dt">estimations =</span> <span class="ot">NULL</span>,
+    <span class="dt">step_size =</span> <span class="ot">NA_real_</span>,
+    <span class="dt">epsilon =</span> <span class="ot">NA_real_</span>,
+    <span class="dt">states =</span> <span class="ot">NULL</span>,
+    <span class="dt">greedy =</span> <span class="ot">NULL</span>,
+    <span class="dt">symbol =</span> <span class="ot">NA_integer_</span>,
+    <span class="dt">initialize =</span> <span class="cf">function</span> (<span class="dt">step_size =</span> <span class="fl">0.1</span>, <span class="dt">epsilon =</span> <span class="fl">0.1</span>) {
+        self<span class="op">$</span>estimations &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, max_hash)
+        self<span class="op">$</span>step_size &lt;-<span class="st"> </span>step_size
+        self<span class="op">$</span>epsilon &lt;-<span class="st"> </span>epsilon
+        self<span class="op">$</span>states &lt;-<span class="st"> </span><span class="kw">list</span>()
+        self<span class="op">$</span>greedy &lt;-<span class="st"> </span><span class="kw">list</span>()
+    },
+    <span class="dt">reset =</span> <span class="cf">function</span> () {
+        self<span class="op">$</span>states &lt;-<span class="st"> </span><span class="kw">list</span>()
+        self<span class="op">$</span>greedy &lt;-<span class="st"> </span><span class="kw">list</span>()
+    },
+    <span class="dt">set_state =</span> <span class="cf">function</span> (state) {
+        self<span class="op">$</span>states[[<span class="kw">length</span>(self<span class="op">$</span>states) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]] &lt;-<span class="st"> </span>state
+        self<span class="op">$</span>greedy[[<span class="kw">length</span>(self<span class="op">$</span>greedy) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]] &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+    },
+    <span class="dt">set_symbol =</span> <span class="cf">function</span> (symbol) {
+        self<span class="op">$</span>symbol &lt;-<span class="st"> </span>symbol
+        <span class="cf">for</span> (hash_val <span class="cf">in</span> rlang<span class="op">::</span><span class="kw">env_names</span>(all_states)) {
+            state &lt;-<span class="st"> </span>all_states[[hash_val]]<span class="op">$</span>state
+            is_end &lt;-<span class="st"> </span>all_states[[hash_val]]<span class="op">$</span>end
+            hash_val_int &lt;-<span class="st"> </span><span class="kw">as.integer</span>(hash_val)
+            <span class="cf">if</span> (is_end) {
+                <span class="cf">if</span> (state<span class="op">$</span>winner <span class="op">==</span><span class="st"> </span>self<span class="op">$</span>symbol) {
+                    self<span class="op">$</span>estimations[hash_val_int] &lt;-<span class="st"> </span><span class="fl">1.0</span>
+                } <span class="cf">else</span> <span class="cf">if</span> (state<span class="op">$</span>winner <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {
+                    <span class="co"># we need to distinguish between a tie and a lose</span>
+                    self<span class="op">$</span>estimations[hash_val_int] &lt;-<span class="st"> </span><span class="fl">0.5</span>
+                } <span class="cf">else</span> {
+                    self<span class="op">$</span>estimations[hash_val_int] &lt;-<span class="st"> </span><span class="dv">0</span>
+                }
+            } <span class="cf">else</span> {
+                self<span class="op">$</span>estimations[hash_val_int] &lt;-<span class="st"> </span><span class="fl">0.5</span>
+            }
+        }
+    },
+    <span class="co"># update value estimation</span>
+    <span class="dt">backup =</span> <span class="cf">function</span> ( ) {
+        <span class="co"># for debug</span>
+        <span class="co"># cat(&quot;player trajectory\n&quot;)</span>
+        <span class="co"># walk(self$states, ~.x$print_state())</span>
+        self<span class="op">$</span>states &lt;-<span class="st"> </span><span class="kw">map_int</span>(self<span class="op">$</span>states, <span class="op">~</span><span class="st"> </span><span class="kw">as.integer</span>(.x<span class="op">$</span><span class="kw">hash</span>()))
+        
+        <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">rev</span>(<span class="kw">seq_len</span>(<span class="kw">length</span>(self<span class="op">$</span>states) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))) {
+            state &lt;-<span class="st"> </span>self<span class="op">$</span>states[i]
+            td_error &lt;-<span class="st"> </span>self<span class="op">$</span>greedy[[i]] <span class="op">*</span><span class="st"> </span>(self<span class="op">$</span>estimations[self<span class="op">$</span>states[i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]] <span class="op">-</span><span class="st"> </span>self<span class="op">$</span>estimations[state])
+            self<span class="op">$</span>estimations[state] &lt;-<span class="st"> </span>self<span class="op">$</span>estimations[state] <span class="op">+</span><span class="st"> </span>self<span class="op">$</span>step_size <span class="op">*</span><span class="st"> </span>td_error
+        }
+    },
+    <span class="co"># choose an action based on the state</span>
+    <span class="dt">act =</span> <span class="cf">function</span> (...) {
+        state &lt;-<span class="st"> </span>self<span class="op">$</span>states[[<span class="kw">length</span>(self<span class="op">$</span>states)]]
+        <span class="co"># state$print_state()</span>
+        next_states &lt;-<span class="st"> </span><span class="kw">list</span>()
+        next_positions &lt;-<span class="st"> </span><span class="kw">list</span>()
+        
+        <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(n)) {
+            <span class="cf">for</span> (j <span class="cf">in</span> <span class="kw">seq_len</span>(n)) {
+                <span class="cf">if</span> (state<span class="op">$</span>data[i, j] <span class="op">==</span><span class="st"> </span>0L) {
+                    ind &lt;-<span class="st"> </span><span class="kw">length</span>(next_positions) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+                    next_positions[[ind]] &lt;-<span class="st"> </span><span class="kw">c</span>(i, j)
+                    next_states[[ind]] &lt;-<span class="st"> </span>state<span class="op">$</span><span class="kw">next_state</span>(i, j, self<span class="op">$</span>symbol)<span class="op">$</span><span class="kw">hash</span>()
+                }
+            }
+        }
+        
+        <span class="cf">if</span> (<span class="kw">runif</span>(1L) <span class="op">&lt;</span><span class="st"> </span>self<span class="op">$</span>epsilon) {
+            action &lt;-<span class="st"> </span><span class="kw">c</span>(
+                next_positions[[<span class="kw">sample.int</span>(<span class="kw">length</span>(next_positions), 1L)]], 
+                self<span class="op">$</span>symbol
+            )
+            self<span class="op">$</span>greedy[[<span class="kw">length</span>(self<span class="op">$</span>greedy)]] &lt;-<span class="st"> </span><span class="ot">FALSE</span>
+            <span class="kw">invisible</span>(action)
+        }
+        
+        values &lt;-<span class="st"> </span><span class="kw">map2_dfr</span>(next_states, next_positions,
+            <span class="op">~</span><span class="st"> </span><span class="kw">tibble</span>(
+                <span class="dt">value =</span> self<span class="op">$</span>estimations[<span class="kw">as.integer</span>(.x)],
+                <span class="dt">i =</span> .y[<span class="dv">1</span>],
+                <span class="dt">j =</span> .y[<span class="dv">2</span>]
+            )
+        ) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">sample_n</span>(<span class="dt">size =</span> <span class="kw">n</span>()) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">arrange</span>(<span class="kw">desc</span>(value)) <span class="op">%&gt;%</span>
+<span class="st">            </span><span class="kw">slice</span>(<span class="dv">1</span>)
+        
+        action &lt;-<span class="st"> </span><span class="kw">c</span>(
+            <span class="kw">c</span>(values<span class="op">$</span>i, values<span class="op">$</span>j),
+            self<span class="op">$</span>symbol
+        )
+        <span class="kw">invisible</span>(action)
+    }
+))</code></pre>
+<p>Let us check whether a play by two AI players work correctly.</p>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">900</span>)
+Judger<span class="op">$</span><span class="kw">new</span>(Player<span class="op">$</span><span class="kw">new</span>(), Player<span class="op">$</span><span class="kw">new</span>())<span class="op">$</span><span class="kw">play</span>(<span class="dt">print_state =</span> <span class="ot">TRUE</span>)</code></pre>
+<pre><code>## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## -------------
+## | 0 | * | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## -------------
+## | 0 | * | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | x | 0 |
+## -------------
+## -------------
+## | * | * | 0 |
+## -------------
+## | 0 | 0 | 0 |
+## -------------
+## | 0 | x | 0 |
+## -------------
+## -------------
+## | * | * | 0 |
+## -------------
+## | 0 | 0 | x |
+## -------------
+## | 0 | x | 0 |
+## -------------
+## -------------
+## | * | * | * |
+## -------------
+## | 0 | 0 | x |
+## -------------
+## | 0 | x | 0 |
+## -------------</code></pre>
+<pre><code>## [1] 1</code></pre>
+<p>Now, let us train players through multiple plays between two AI players.</p>
+<pre class="sourceCode r"><code class="sourceCode r">train &lt;-<span class="st"> </span><span class="cf">function</span>(epochs, <span class="dt">print_every_n =</span> <span class="dv">500</span>) {
+    player1 &lt;-<span class="st"> </span>Player<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon=</span><span class="fl">0.01</span>)
+    player2 &lt;-<span class="st"> </span>Player<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon=</span><span class="fl">0.01</span>)
+    judger &lt;-<span class="st"> </span>Judger<span class="op">$</span><span class="kw">new</span>(player1, player2)
+    player1_win =<span class="st"> </span><span class="fl">0.0</span>
+    player2_win =<span class="st"> </span><span class="fl">0.0</span>
+    player1_win_prev =<span class="st"> </span><span class="fl">0.0</span>
+    player2_win_prev =<span class="st"> </span><span class="fl">0.0</span>
+    <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">seq_len</span>(epochs)) {
+        winner &lt;-<span class="st"> </span>judger<span class="op">$</span><span class="kw">play</span>(<span class="dt">print_state =</span> <span class="ot">FALSE</span>)
+        <span class="cf">if</span> (winner <span class="op">==</span><span class="st"> </span>1L) {
+            player1_win =<span class="st"> </span>player1_win <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+        } <span class="cf">else</span> <span class="cf">if</span> (winner <span class="op">==</span><span class="st"> </span><span class="op">-</span>1L) {
+            player2_win =<span class="st"> </span>player2_win <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+        }
+        
+        <span class="cf">if</span> (i <span class="op">%%</span><span class="st"> </span>print_every_n <span class="op">==</span><span class="st"> </span><span class="dv">0</span>) {
+            <span class="kw">cat</span>(<span class="kw">str_glue</span>(
+                <span class="st">&quot;Epoch {(i %/% print_every_n - 1) * print_every_n + 1} -- {i}, &quot;</span>,
+                <span class="st">&quot;player 1 winrate: {(player1_win - player1_win_prev) / print_every_n}, &quot;</span>, 
+                <span class="st">&quot;player 2 winrate: {(player2_win - player2_win_prev) / print_every_n}&quot;</span>))
+            <span class="kw">cat</span>(<span class="st">&quot;</span><span class="ch">\n</span><span class="st">&quot;</span>)
+            player1_win_prev &lt;-<span class="st"> </span>player1_win
+            player2_win_prev &lt;-<span class="st"> </span>player2_win
+        }
+        
+        player1<span class="op">$</span><span class="kw">backup</span>()
+        player2<span class="op">$</span><span class="kw">backup</span>()
+        judger<span class="op">$</span><span class="kw">reset</span>()
+    }
+}</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">900</span>)
+<span class="kw">train</span>(<span class="fl">1e+3</span>, <span class="dt">print_every_n =</span> <span class="dv">100</span>)</code></pre>
+<pre><code>## Epoch 1 -- 100, player 1 winrate: 0.66, player 2 winrate: 0.3
+## Epoch 101 -- 200, player 1 winrate: 0.4, player 2 winrate: 0.18
+## Epoch 201 -- 300, player 1 winrate: 0.37, player 2 winrate: 0.2
+## Epoch 301 -- 400, player 1 winrate: 0.25, player 2 winrate: 0.05
+## Epoch 401 -- 500, player 1 winrate: 0, player 2 winrate: 0
+## Epoch 501 -- 600, player 1 winrate: 0, player 2 winrate: 0
+## Epoch 601 -- 700, player 1 winrate: 0, player 2 winrate: 0
+## Epoch 701 -- 800, player 1 winrate: 0, player 2 winrate: 0
+## Epoch 801 -- 900, player 1 winrate: 0, player 2 winrate: 0
+## Epoch 901 -- 1000, player 1 winrate: 0, player 2 winrate: 0</code></pre>
+<p>It is observed that Player 1 who plays first won more at the beginning, but after two AI players learned from few hundreds plays, the results were mostly tie.</p>
+
+<div id="refs" class="references">
+<div>
+<p>Sutton, Richard S, and Andrew G Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. MIT press.</p>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["reinforcement-learning-an-introduction.pdf", "reinforcement-learning-an-introduction.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>
