@@ -12,7 +12,7 @@ description: "This is R script that reproduces ShangtongZhang's Python code for 
 
 # Preface {-}
 
-This is R script that reproduces [ShangtongZhang's Python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter01/tic_tac_toe.py) for Sutton & Barto's book Reinforcement Learning: An Introduction [@sutton2018reinforcement]
+This is R script that reproduces [ShangtongZhang's Python code](https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/) for Sutton & Barto's book Reinforcement Learning: An Introduction [@sutton2018reinforcement]
 
 
 
