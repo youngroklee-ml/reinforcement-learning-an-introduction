@@ -25,7 +25,7 @@
 <meta name="author" content="Youngrok Lee">
 
 
-<meta name="date" content="2019-04-15">
+<meta name="date" content="2019-04-27">
 
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="apple-mobile-web-app-capable" content="yes">
@@ -33,7 +33,7 @@
   
   
 <link rel="prev" href="index.html">
-
+<link rel="next" href="multi-armed-bandit.html">
 <script src="libs/jquery-2.2.3/jquery.min.js"></script>
 <link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
 <link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
@@ -133,6 +133,15 @@ code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warni
 <li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
 <li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
 <li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#example-tic-tac_toe"><i class="fa fa-check"></i><b>1.1</b> Example: Tic-Tac_Toe</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html"><i class="fa fa-check"></i><b>2</b> Multi-armed Bandit</a><ul>
+<li class="chapter" data-level="2.1" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#example-the-10-armed-testbed"><i class="fa fa-check"></i><b>2.1</b> Example: The 10-armed Testbed</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-2"><i class="fa fa-check"></i><b>2.1.1</b> Figure 2-2</a></li>
+<li class="chapter" data-level="2.1.2" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-3"><i class="fa fa-check"></i><b>2.1.2</b> Figure 2-3</a></li>
+<li class="chapter" data-level="2.1.3" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-4"><i class="fa fa-check"></i><b>2.1.3</b> Figure 2-4</a></li>
+<li class="chapter" data-level="2.1.4" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-5"><i class="fa fa-check"></i><b>2.1.4</b> Figure 2-5</a></li>
+<li class="chapter" data-level="2.1.5" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-6"><i class="fa fa-check"></i><b>2.1.5</b> Figure 2-6</a></li>
+</ul></li>
 </ul></li>
 <li class="divider"></li>
 <li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
@@ -328,7 +337,6 @@ max_hash &lt;-<span class="st"> </span><span class="kw">max</span>(<span class="
             <span class="co"># debug</span>
             <span class="co"># cat(&quot;current hash: &quot;, as.character(current_state$hash()), &quot;\n&quot;)</span>
 
-            
             <span class="cf">if</span> (print_state) {
                 current_state<span class="op">$</span><span class="kw">print_state</span>()
             }
@@ -417,8 +425,11 @@ Player &lt;-<span class="st"> </span><span class="kw">R6Class</span>(<span class
         
         <span class="cf">for</span> (i <span class="cf">in</span> <span class="kw">rev</span>(<span class="kw">seq_len</span>(<span class="kw">length</span>(self<span class="op">$</span>states) <span class="op">-</span><span class="st"> </span><span class="dv">1</span>))) {
             state &lt;-<span class="st"> </span>self<span class="op">$</span>states[i]
-            td_error &lt;-<span class="st"> </span>self<span class="op">$</span>greedy[[i]] <span class="op">*</span><span class="st"> </span>(self<span class="op">$</span>estimations[self<span class="op">$</span>states[i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]] <span class="op">-</span><span class="st"> </span>self<span class="op">$</span>estimations[state])
-            self<span class="op">$</span>estimations[state] &lt;-<span class="st"> </span>self<span class="op">$</span>estimations[state] <span class="op">+</span><span class="st"> </span>self<span class="op">$</span>step_size <span class="op">*</span><span class="st"> </span>td_error
+            td_error &lt;-<span class="st"> </span>self<span class="op">$</span>greedy[[i]] <span class="op">*</span><span class="st"> </span>(
+                self<span class="op">$</span>estimations[self<span class="op">$</span>states[i <span class="op">+</span><span class="st"> </span><span class="dv">1</span>]] <span class="op">-</span><span class="st"> </span>
+<span class="st">                    </span>self<span class="op">$</span>estimations[state])
+            self<span class="op">$</span>estimations[state] &lt;-<span class="st"> </span>self<span class="op">$</span>estimations[state] <span class="op">+</span><span class="st"> </span>
+<span class="st">                </span>self<span class="op">$</span>step_size <span class="op">*</span><span class="st"> </span>td_error
         }
     },
     <span class="co"># choose an action based on the state</span>
@@ -433,7 +444,8 @@ Player &lt;-<span class="st"> </span><span class="kw">R6Class</span>(<span class
                 <span class="cf">if</span> (state<span class="op">$</span>data[i, j] <span class="op">==</span><span class="st"> </span>0L) {
                     ind &lt;-<span class="st"> </span><span class="kw">length</span>(next_positions) <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
                     next_positions[[ind]] &lt;-<span class="st"> </span><span class="kw">c</span>(i, j)
-                    next_states[[ind]] &lt;-<span class="st"> </span>state<span class="op">$</span><span class="kw">next_state</span>(i, j, self<span class="op">$</span>symbol)<span class="op">$</span><span class="kw">hash</span>()
+                    next_states[[ind]] &lt;-<span class="st"> </span>state<span class="op">$</span><span class="kw">next_state</span>(
+                        i, j, self<span class="op">$</span>symbol)<span class="op">$</span><span class="kw">hash</span>()
                 }
             }
         }
@@ -557,11 +569,6 @@ Judger<span class="op">$</span><span class="kw">new</span>(Player<span class="op
 ## Epoch 901 -- 1000, player 1 winrate: 0, player 2 winrate: 0</code></pre>
 <p>It is observed that Player 1 who plays first won more at the beginning, but after two AI players learned from few hundreds plays, the results were mostly tie.</p>
 
-<div id="refs" class="references">
-<div>
-<p>Sutton, Richard S, and Andrew G Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. MIT press.</p>
-</div>
-</div>
 </div>
 </div>
             </section>
@@ -569,8 +576,8 @@ Judger<span class="op">$</span><span class="kw">new</span>(Player<span class="op
           </div>
         </div>
       </div>
-<a href="index.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
-
+<a href="index.html" class="navigation navigation-prev " aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+<a href="multi-armed-bandit.html" class="navigation navigation-next " aria-label="Next page"><i class="fa fa-angle-right"></i></a>
     </div>
   </div>
 <script src="libs/gitbook-2.6.7/js/app.min.js"></script>

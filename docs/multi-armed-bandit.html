@@ -1,0 +1,604 @@
+<!DOCTYPE html>
+<html >
+
+<head>
+
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <title>Chapter 2 Multi-armed Bandit | R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)</title>
+  <meta name="description" content="This is R script that reproduces ShangtongZhang’s Python code for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)">
+  <meta name="generator" content="bookdown  and GitBook 2.6.7">
+
+  <meta property="og:title" content="Chapter 2 Multi-armed Bandit | R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  <meta property="og:type" content="book" />
+  
+  
+  <meta property="og:description" content="This is R script that reproduces ShangtongZhang’s Python code for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  
+
+  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:title" content="Chapter 2 Multi-armed Bandit | R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  
+  <meta name="twitter:description" content="This is R script that reproduces ShangtongZhang’s Python code for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)" />
+  
+
+<meta name="author" content="Youngrok Lee">
+
+
+<meta name="date" content="2019-04-27">
+
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  
+  
+<link rel="prev" href="intro.html">
+
+<script src="libs/jquery-2.2.3/jquery.min.js"></script>
+<link href="libs/gitbook-2.6.7/css/style.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-table.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-bookdown.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-highlight.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-search.css" rel="stylesheet" />
+<link href="libs/gitbook-2.6.7/css/plugin-fontsettings.css" rel="stylesheet" />
+
+
+
+
+
+
+
+
+
+<style type="text/css">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+</style>
+
+<link rel="stylesheet" href="style.css" type="text/css" />
+</head>
+
+<body>
+
+
+
+  <div class="book without-animation with-summary font-size-2 font-family-1" data-basepath=".">
+
+    <div class="book-summary">
+      <nav role="navigation">
+
+<ul class="summary">
+<li><a href="./">R scripts for Reinforcement Learning: An Introduction</a></li>
+
+<li class="divider"></li>
+<li class="chapter" data-level="" data-path="index.html"><a href="index.html"><i class="fa fa-check"></i>Preface</a></li>
+<li class="chapter" data-level="1" data-path="intro.html"><a href="intro.html"><i class="fa fa-check"></i><b>1</b> Introduction</a><ul>
+<li class="chapter" data-level="1.1" data-path="intro.html"><a href="intro.html#example-tic-tac_toe"><i class="fa fa-check"></i><b>1.1</b> Example: Tic-Tac_Toe</a></li>
+</ul></li>
+<li class="chapter" data-level="2" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html"><i class="fa fa-check"></i><b>2</b> Multi-armed Bandit</a><ul>
+<li class="chapter" data-level="2.1" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#example-the-10-armed-testbed"><i class="fa fa-check"></i><b>2.1</b> Example: The 10-armed Testbed</a><ul>
+<li class="chapter" data-level="2.1.1" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-2"><i class="fa fa-check"></i><b>2.1.1</b> Figure 2-2</a></li>
+<li class="chapter" data-level="2.1.2" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-3"><i class="fa fa-check"></i><b>2.1.2</b> Figure 2-3</a></li>
+<li class="chapter" data-level="2.1.3" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-4"><i class="fa fa-check"></i><b>2.1.3</b> Figure 2-4</a></li>
+<li class="chapter" data-level="2.1.4" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-5"><i class="fa fa-check"></i><b>2.1.4</b> Figure 2-5</a></li>
+<li class="chapter" data-level="2.1.5" data-path="multi-armed-bandit.html"><a href="multi-armed-bandit.html#figure-2-6"><i class="fa fa-check"></i><b>2.1.5</b> Figure 2-6</a></li>
+</ul></li>
+</ul></li>
+<li class="divider"></li>
+<li><a href="https://github.com/rstudio/bookdown" target="blank">Published with bookdown</a></li>
+
+</ul>
+
+      </nav>
+    </div>
+
+    <div class="book-body">
+      <div class="body-inner">
+        <div class="book-header" role="navigation">
+          <h1>
+            <i class="fa fa-circle-o-notch fa-spin"></i><a href="./">R scripts for Sutton &amp; Barto’s book Reinforcement Learning: An Introduction (2nd Edition)</a>
+          </h1>
+        </div>
+
+        <div class="page-wrapper" tabindex="-1" role="main">
+          <div class="page-inner">
+
+            <section class="normal" id="section-">
+<div id="multi-armed-bandit" class="section level1">
+<h1><span class="header-section-number">Chapter 2</span> Multi-armed Bandit</h1>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(tidyverse)</code></pre>
+<div id="example-the-10-armed-testbed" class="section level2">
+<h2><span class="header-section-number">2.1</span> Example: The 10-armed Testbed</h2>
+<p>Python code exists <a href="https://github.com/ShangtongZhang/reinforcement-learning-an-introduction/blob/master/chapter02/ten_armed_testbed.py">here</a> with the following copyright statement.</p>
+<pre><code>#######################################################################
+# Copyright (C)                                                       #
+# 2016-2018 Shangtong Zhang(zhangshangtong.cpp@gmail.com)             #
+# 2016 Tian Jun(tianjun.cpp@gmail.com)                                #
+# 2016 Artem Oboturov(oboturov@gmail.com)                             #
+# 2016 Kenta Shimada(hyperkentakun@gmail.com)                         #
+# Permission given to modify the code as long as you keep this        #
+# declaration at the top                                              #
+#######################################################################</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">library</span>(R6)</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">Bandit &lt;-<span class="st"> </span><span class="kw">R6Class</span>(<span class="st">&quot;Bandit&quot;</span>, <span class="kw">list</span>(
+    <span class="co"># @k_arm: # of arms</span>
+    <span class="co"># @epsilon: probability for exploration in epsilon-greedy algorithm</span>
+    <span class="co"># @initial: initial estimation for each action</span>
+    <span class="co"># @step_size: constant step size for updating estimations</span>
+    <span class="co"># @sample_averages: if True, use sample averages to update estimations instead of constant step size</span>
+    <span class="co"># @UCB_param: if not None, use UCB algorithm to select action</span>
+    <span class="co"># @gradient: if True, use gradient based bandit algorithm</span>
+    <span class="co"># @gradient_baseline: if True, use average reward as baseline for gradient based bandit algorithm</span>
+    <span class="dt">k =</span> <span class="ot">NA_integer_</span>,
+    <span class="dt">step_size =</span> <span class="ot">NA_real_</span>,
+    <span class="dt">sample_averages =</span> <span class="ot">FALSE</span>,
+    <span class="dt">indices =</span> <span class="ot">NULL</span>,
+    <span class="dt">time =</span> 0L,
+    <span class="dt">UCB_param =</span> <span class="ot">NULL</span>,
+    <span class="dt">gradient =</span> <span class="ot">FALSE</span>,
+    <span class="dt">gradient_baseline =</span> <span class="ot">FALSE</span>,
+    <span class="dt">average_reward =</span> <span class="dv">0</span>,
+    <span class="dt">true_reward =</span> <span class="dv">0</span>,
+    <span class="dt">epsilon =</span> <span class="ot">NA_real_</span>,
+    <span class="dt">initial =</span> <span class="ot">NA_real_</span>,
+    <span class="dt">initialize =</span> <span class="cf">function</span> (
+      <span class="dt">k_arm =</span> <span class="dv">10</span>, <span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">initial =</span> <span class="dv">0</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>, 
+      <span class="dt">sample_averages =</span> <span class="ot">FALSE</span>, <span class="dt">UCB_param =</span> <span class="ot">NULL</span>,
+      <span class="dt">gradient =</span> <span class="ot">FALSE</span>, <span class="dt">gradient_baseline =</span> <span class="ot">FALSE</span>, <span class="dt">true_reward =</span> <span class="dv">0</span>
+    ) {
+      self<span class="op">$</span>k &lt;-<span class="st"> </span>k_arm
+      self<span class="op">$</span>step_size &lt;-<span class="st"> </span>step_size
+      self<span class="op">$</span>sample_averages &lt;-<span class="st"> </span>sample_averages
+      self<span class="op">$</span>indices &lt;-<span class="st"> </span><span class="kw">seq_len</span>(self<span class="op">$</span>k)
+      self<span class="op">$</span>time &lt;-<span class="st"> </span>0L
+      self<span class="op">$</span>UCB_param &lt;-<span class="st"> </span>UCB_param
+      self<span class="op">$</span>gradient &lt;-<span class="st"> </span>gradient
+      self<span class="op">$</span>gradient_baseline &lt;-<span class="st"> </span>gradient_baseline
+      self<span class="op">$</span>average_reward &lt;-<span class="st"> </span><span class="dv">0</span>
+      self<span class="op">$</span>true_reward &lt;-<span class="st"> </span>true_reward
+      self<span class="op">$</span>epsilon &lt;-<span class="st"> </span>epsilon
+      self<span class="op">$</span>initial &lt;-<span class="st"> </span>initial
+    }
+))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;q_true&quot;</span>, <span class="ot">NULL</span>)
+Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;q_estimation&quot;</span>, <span class="ot">NULL</span>)
+Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;action_count&quot;</span>, <span class="ot">NULL</span>)
+Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;best_action&quot;</span>, <span class="ot">NULL</span>)
+Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;action_prob&quot;</span>, <span class="ot">NULL</span>)
+
+Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;reset&quot;</span>, <span class="cf">function</span>() {
+  <span class="co"># set time to 0</span>
+  self<span class="op">$</span>time &lt;-<span class="st"> </span>0L
+  <span class="co"># real reward for each action</span>
+  self<span class="op">$</span>q_true &lt;-<span class="st"> </span><span class="kw">rnorm</span>(self<span class="op">$</span>k) <span class="op">+</span><span class="st"> </span>self<span class="op">$</span>true_reward
+  
+  <span class="co"># estimation for each action</span>
+  self<span class="op">$</span>q_estimation &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">0</span>, self<span class="op">$</span>k) <span class="op">+</span><span class="st"> </span>self<span class="op">$</span>initial
+  
+  <span class="co"># # of chosen times for each action</span>
+  self<span class="op">$</span>action_count =<span class="st"> </span><span class="kw">rep</span>(0L, self<span class="op">$</span>k)
+  
+  <span class="co"># action probability for gradient methods</span>
+  self<span class="op">$</span>action_prob &lt;-<span class="st"> </span><span class="kw">rep</span>(<span class="dv">1</span><span class="op">/</span>self<span class="op">$</span>k, self<span class="op">$</span>k)
+  
+  self<span class="op">$</span>best_action &lt;-<span class="st"> </span><span class="kw">which.max</span>(self<span class="op">$</span>q_true) 
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">maxima &lt;-<span class="st"> </span><span class="cf">function</span>(x) {
+  ind &lt;-<span class="st"> </span><span class="kw">which</span>(x <span class="op">==</span><span class="st"> </span><span class="kw">max</span>(x, <span class="dt">na.rm =</span> <span class="ot">TRUE</span>))
+  <span class="cf">if</span> (<span class="kw">length</span>(ind) <span class="op">&gt;</span><span class="st"> </span><span class="dv">1</span>) {
+    ind &lt;-<span class="st"> </span><span class="kw">sample</span>(ind, <span class="dv">1</span>)
+  }
+  
+  <span class="kw">invisible</span>(ind)
+}
+
+<span class="co"># get an action for this bandit</span>
+Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;act&quot;</span>, <span class="cf">function</span>() {
+  <span class="cf">if</span> (<span class="kw">runif</span>(<span class="dv">1</span>) <span class="op">&lt;</span><span class="st"> </span>self<span class="op">$</span>epsilon) {
+    <span class="kw">return</span>(<span class="kw">sample</span>(self<span class="op">$</span>indices, <span class="dv">1</span>))
+  } 
+  
+  <span class="cf">if</span> (<span class="op">!</span><span class="kw">is.null</span>(self<span class="op">$</span>UCB_param)) {
+    UCB_estimation &lt;-<span class="st"> </span>self<span class="op">$</span>q_estimation <span class="op">+</span>
+<span class="st">      </span>self<span class="op">$</span>UCB_param <span class="op">*</span><span class="st"> </span><span class="kw">sqrt</span>(<span class="kw">log</span>(self<span class="op">$</span>time <span class="op">+</span><span class="st"> </span><span class="dv">1</span>) <span class="op">/</span><span class="st"> </span>(self<span class="op">$</span>action_count <span class="op">+</span><span class="st"> </span><span class="fl">1e-5</span>))
+    <span class="kw">return</span>(<span class="kw">maxima</span>(UCB_estimation))
+  }
+  
+  <span class="cf">if</span> (self<span class="op">$</span>gradient) {
+    exp_est &lt;-<span class="st"> </span><span class="kw">exp</span>(self<span class="op">$</span>q_estimation)
+    self<span class="op">$</span>action_prob &lt;-<span class="st"> </span>exp_est <span class="op">/</span><span class="st"> </span><span class="kw">sum</span>(exp_est)
+    <span class="kw">return</span>(<span class="kw">sample</span>(self<span class="op">$</span>indices, <span class="dv">1</span>, <span class="dt">prob =</span> self<span class="op">$</span>action_prob))
+  }
+  
+  <span class="kw">return</span>(<span class="kw">maxima</span>(self<span class="op">$</span>q_estimation))
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">Bandit<span class="op">$</span><span class="kw">set</span>(<span class="st">&quot;public&quot;</span>, <span class="st">&quot;step&quot;</span>, <span class="cf">function</span>(action) {
+  <span class="co"># generate the reward under N(real reward, 1)</span>
+  reward &lt;-<span class="st"> </span><span class="kw">rnorm</span>(<span class="dv">1</span>, self<span class="op">$</span>q_true[action], <span class="dv">1</span>)
+  self<span class="op">$</span>time &lt;-<span class="st"> </span>self<span class="op">$</span>time <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+  self<span class="op">$</span>average_reward &lt;-<span class="st"> </span>(self<span class="op">$</span>time <span class="op">-</span><span class="st"> </span><span class="fl">1.0</span>) <span class="op">/</span><span class="st"> </span>self<span class="op">$</span>time <span class="op">*</span><span class="st"> </span>
+<span class="st">    </span>self<span class="op">$</span>average_reward <span class="op">+</span><span class="st"> </span>reward <span class="op">/</span><span class="st"> </span>self<span class="op">$</span>time
+  self<span class="op">$</span>action_count[action] &lt;-<span class="st"> </span>self<span class="op">$</span>action_count[action] <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+  
+  <span class="cf">if</span> (self<span class="op">$</span>sample_averages) {
+    <span class="co"># update estimation using sample averages</span>
+    self<span class="op">$</span>q_estimation[action] &lt;-<span class="st"> </span>self<span class="op">$</span>q_estimation[action] <span class="op">+</span><span class="st"> </span>
+<span class="st">      </span><span class="dv">1</span> <span class="op">/</span><span class="st"> </span>self<span class="op">$</span>action_count[action] <span class="op">*</span><span class="st"> </span>(reward <span class="op">-</span><span class="st"> </span>self<span class="op">$</span>q_estimation[action])
+  } <span class="cf">else</span> <span class="cf">if</span> (self<span class="op">$</span>gradient) {
+    gradient &lt;-<span class="st"> </span><span class="op">-</span><span class="st"> </span>self<span class="op">$</span>action_prob
+    gradient[action] &lt;-<span class="st"> </span>gradient[action] <span class="op">+</span><span class="st"> </span><span class="dv">1</span>
+    baseline &lt;-<span class="st"> </span>self<span class="op">$</span>average_reward <span class="op">*</span><span class="st"> </span>self<span class="op">$</span>gradient_baseline
+    self<span class="op">$</span>q_estimation &lt;-<span class="st"> </span>self<span class="op">$</span>q_estimation <span class="op">+</span><span class="st"> </span>
+<span class="st">      </span>self<span class="op">$</span>step_size <span class="op">*</span><span class="st"> </span>(reward <span class="op">-</span><span class="st"> </span>baseline) <span class="op">*</span><span class="st"> </span>gradient
+  } <span class="cf">else</span> {
+    <span class="co"># update estimation with constant step size</span>
+    self<span class="op">$</span>q_estimation[action] &lt;-<span class="st"> </span>self<span class="op">$</span>q_estimation[action] <span class="op">+</span><span class="st"> </span>
+<span class="st">      </span>self<span class="op">$</span>step_size <span class="op">*</span><span class="st"> </span>(reward <span class="op">-</span><span class="st"> </span>self<span class="op">$</span>q_estimation[action])
+  }
+  
+  <span class="kw">invisible</span>(reward)
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">simulate_bandit &lt;-<span class="st"> </span><span class="cf">function</span>(bandit, time) {
+  bandit<span class="op">$</span><span class="kw">reset</span>()
+  best_action &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;logical&quot;</span>, <span class="dt">length =</span> time)
+  reward &lt;-<span class="st"> </span><span class="kw">vector</span>(<span class="st">&quot;numeric&quot;</span>, <span class="dt">length =</span> time)
+  <span class="cf">for</span>(t <span class="cf">in</span> <span class="kw">seq_len</span>(time)) {
+    action &lt;-<span class="st"> </span>bandit<span class="op">$</span><span class="kw">act</span>()
+    reward[t] &lt;-<span class="st"> </span>bandit<span class="op">$</span><span class="kw">step</span>(action)
+    <span class="cf">if</span> (action <span class="op">==</span><span class="st"> </span>bandit<span class="op">$</span>best_action) {
+      best_action[t] &lt;-<span class="st"> </span><span class="ot">TRUE</span>
+    }
+  }
+  
+  res &lt;-<span class="st"> </span><span class="kw">tibble</span>(
+    <span class="dt">t =</span> <span class="kw">seq_len</span>(time),
+    <span class="dt">best_action =</span> best_action,
+    <span class="dt">reward =</span> reward
+  )
+  
+  <span class="kw">return</span>(res)
+}</code></pre>
+<div id="figure-2-2" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Figure 2-2</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2000</span>)
+
+epsilons &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.00</span>, <span class="fl">0.01</span>, <span class="fl">0.10</span>)
+runs &lt;-<span class="st"> </span><span class="dv">2000</span>
+times &lt;-<span class="st"> </span><span class="dv">1000</span>
+
+bandits &lt;-<span class="st"> </span><span class="kw">map</span>(<span class="kw">rep_along</span>(<span class="kw">seq_len</span>(runs <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(epsilons)), epsilons), 
+               <span class="op">~</span><span class="st"> </span>Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> .x, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>))
+
+pb &lt;-<span class="st"> </span><span class="kw">progress_estimated</span>(<span class="kw">length</span>(bandits))
+sim_results &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(bandits, <span class="cf">function</span>(x) {
+  pb<span class="op">$</span><span class="kw">tick</span>()<span class="op">$</span><span class="kw">print</span>()
+  <span class="kw">simulate_bandit</span>(x, times) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(<span class="dt">epsilon =</span> x<span class="op">$</span>epsilon)
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(<span class="dt">epsilon =</span> <span class="kw">factor</span>(epsilon, <span class="dt">levels =</span> epsilons)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(epsilon, t) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg_reward =</span> <span class="kw">mean</span>(reward),
+            <span class="dt">pct_optimal =</span> <span class="kw">mean</span>(best_action)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">gather</span>(<span class="dt">key =</span> <span class="st">&quot;key&quot;</span>, <span class="dt">value =</span> <span class="st">&quot;value&quot;</span>, 
+         avg_reward, pct_optimal) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> t, <span class="dt">y =</span> value)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> epsilon)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">facet_wrap</span>(<span class="op">~</span><span class="st"> </span>key, <span class="dt">nrow =</span> <span class="dv">2</span>, <span class="dt">scales =</span> <span class="st">&quot;free_y&quot;</span>)</code></pre>
+<p><img src="reinforcement-learning-an-introduction_files/figure-html/figure-2-2-plot-1.png" width="672" /></p>
+</div>
+<div id="figure-2-3" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Figure 2-3</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2000</span>)
+
+epsilons &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="fl">0.00</span>, <span class="fl">0.10</span>)
+initial &lt;-<span class="st"> </span><span class="kw">c</span>(<span class="dv">5</span>, <span class="dv">0</span>)
+runs &lt;-<span class="st"> </span><span class="dv">2000</span>
+times &lt;-<span class="st"> </span><span class="dv">1000</span>
+
+bandits &lt;-<span class="st"> </span><span class="kw">map2</span>(<span class="kw">rep_along</span>(<span class="kw">seq_len</span>(runs <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(epsilons)), epsilons), 
+                <span class="kw">rep_along</span>(<span class="kw">seq_len</span>(runs <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(initial)), initial),
+               <span class="op">~</span><span class="st"> </span>Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> .x, 
+                            <span class="dt">initial =</span> .y,
+                            <span class="dt">step_size =</span> <span class="fl">0.1</span>))
+
+pb &lt;-<span class="st"> </span><span class="kw">progress_estimated</span>(<span class="kw">length</span>(bandits))
+sim_results &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(bandits, <span class="cf">function</span>(x) {
+  pb<span class="op">$</span><span class="kw">tick</span>()<span class="op">$</span><span class="kw">print</span>()
+  <span class="kw">simulate_bandit</span>(x, times) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(
+    <span class="dt">epsilon =</span> x<span class="op">$</span>epsilon,
+    <span class="dt">initial =</span> x<span class="op">$</span>initial)
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">config =</span> <span class="kw">if_else</span>(
+      epsilon <span class="op">==</span><span class="st"> </span><span class="dv">0</span>,
+      <span class="st">&quot;Optimistic, greedy&quot;</span>,
+      <span class="st">&quot;Realistic, epsilon-greedy&quot;</span>)
+    ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(config, t) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg_reward =</span> <span class="kw">mean</span>(reward),
+            <span class="dt">pct_optimal =</span> <span class="kw">mean</span>(best_action)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> t, <span class="dt">y =</span> pct_optimal)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> config))</code></pre>
+<p><img src="reinforcement-learning-an-introduction_files/figure-html/figure-2-3-plot-1.png" width="672" /></p>
+</div>
+<div id="figure-2-4" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> Figure 2-4</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2000</span>)
+
+bandits &lt;-<span class="st"> </span><span class="kw">c</span>(
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">2</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="fl">0.1</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>)
+)
+
+runs &lt;-<span class="st"> </span><span class="dv">2000</span>
+times &lt;-<span class="st"> </span><span class="dv">1000</span>
+
+bandits &lt;-<span class="st"> </span><span class="kw">rep_along</span>(<span class="kw">seq_len</span>(runs <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(bandits)), bandits)
+
+pb &lt;-<span class="st"> </span><span class="kw">progress_estimated</span>(<span class="kw">length</span>(bandits))
+sim_results &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(bandits, <span class="cf">function</span>(x) {
+  pb<span class="op">$</span><span class="kw">tick</span>()<span class="op">$</span><span class="kw">print</span>()
+  <span class="kw">simulate_bandit</span>(x, times) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(
+    <span class="dt">epsilon =</span> x<span class="op">$</span>epsilon,
+    <span class="dt">UCB_param =</span> x<span class="op">$</span>UCB_param)
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">config =</span> <span class="kw">if_else</span>(
+      <span class="op">!</span><span class="kw">is.na</span>(UCB_param),
+      <span class="st">&quot;UCB, c = 2&quot;</span>,
+      <span class="st">&quot;epsilon-greedy,epsilon = 0.1&quot;</span>)
+    ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(config, t) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg_reward =</span> <span class="kw">mean</span>(reward),
+            <span class="dt">pct_optimal =</span> <span class="kw">mean</span>(best_action)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> t, <span class="dt">y =</span> avg_reward)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> config))</code></pre>
+<p><img src="reinforcement-learning-an-introduction_files/figure-html/figure-2-4-plot-1.png" width="672" /></p>
+</div>
+<div id="figure-2-5" class="section level3">
+<h3><span class="header-section-number">2.1.4</span> Figure 2-5</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2000</span>)
+
+bandits &lt;-<span class="st"> </span><span class="kw">c</span>(
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>, 
+             <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>, <span class="dt">true_reward =</span> <span class="dv">4</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>, 
+             <span class="dt">gradient_baseline =</span> <span class="ot">FALSE</span>, <span class="dt">true_reward =</span> <span class="dv">4</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="fl">0.4</span>, 
+             <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>, <span class="dt">true_reward =</span> <span class="dv">4</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="fl">0.4</span>, 
+             <span class="dt">gradient_baseline =</span> <span class="ot">FALSE</span>, <span class="dt">true_reward =</span> <span class="dv">4</span>)
+)
+
+runs &lt;-<span class="st"> </span><span class="dv">2000</span>
+times &lt;-<span class="st"> </span><span class="dv">1000</span>
+
+bandits &lt;-<span class="st"> </span><span class="kw">rep_along</span>(<span class="kw">seq_len</span>(runs <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(bandits)), bandits)
+
+pb &lt;-<span class="st"> </span><span class="kw">progress_estimated</span>(<span class="kw">length</span>(bandits))
+sim_results &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(bandits, <span class="cf">function</span>(x) {
+  pb<span class="op">$</span><span class="kw">tick</span>()<span class="op">$</span><span class="kw">print</span>()
+  <span class="kw">simulate_bandit</span>(x, times) <span class="op">%&gt;%</span><span class="st"> </span><span class="kw">mutate</span>(
+    <span class="dt">step_size =</span> x<span class="op">$</span>step_size,
+    <span class="dt">baseline =</span> x<span class="op">$</span>gradient_baseline)
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">config =</span> <span class="kw">str_glue</span>(<span class="st">&quot;Step Size: {step_size}, Baseline: {baseline}&quot;</span>)
+    ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(config, t) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg_reward =</span> <span class="kw">mean</span>(reward),
+            <span class="dt">pct_optimal =</span> <span class="kw">mean</span>(best_action)) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ungroup</span>() <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> t, <span class="dt">y =</span> pct_optimal)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> config))</code></pre>
+<p><img src="reinforcement-learning-an-introduction_files/figure-html/figure-2-5-plot-1.png" width="672" /></p>
+</div>
+<div id="figure-2-6" class="section level3">
+<h3><span class="header-section-number">2.1.5</span> Figure 2-6</h3>
+<pre class="sourceCode r"><code class="sourceCode r"><span class="kw">set.seed</span>(<span class="dv">2000</span>)
+
+bandits &lt;-<span class="st"> </span><span class="kw">c</span>(
+  <span class="co"># epsilon-greedy w/ sample average</span>
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">128</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">64</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">32</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">16</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">8</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  <span class="co"># gradient bandit</span>
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">32</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">16</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">8</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">1</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">2</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">gradient =</span> <span class="ot">TRUE</span>, <span class="dt">step_size =</span> <span class="dv">4</span>, <span class="dt">gradient_baseline =</span> <span class="ot">TRUE</span>),
+  <span class="co"># UCB</span>
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">16</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">8</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">1</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">2</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">UCB_param =</span> <span class="dv">4</span>, <span class="dt">sample_averages =</span> <span class="ot">TRUE</span>),
+  <span class="co"># Optimistic greedy</span>
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">initial =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">4</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">initial =</span> <span class="dv">1</span><span class="op">/</span><span class="dv">2</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">initial =</span> <span class="dv">1</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">initial =</span> <span class="dv">2</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>),
+  Bandit<span class="op">$</span><span class="kw">new</span>(<span class="dt">epsilon =</span> <span class="dv">0</span>, <span class="dt">initial =</span> <span class="dv">4</span>, <span class="dt">step_size =</span> <span class="fl">0.1</span>)
+)
+
+runs &lt;-<span class="st"> </span><span class="dv">500</span>
+times &lt;-<span class="st"> </span><span class="dv">1000</span>
+
+bandits &lt;-<span class="st"> </span><span class="kw">rep_along</span>(<span class="kw">seq_len</span>(runs <span class="op">*</span><span class="st"> </span><span class="kw">length</span>(bandits)), bandits)
+
+pb &lt;-<span class="st"> </span><span class="kw">progress_estimated</span>(<span class="kw">length</span>(bandits))
+sim_results &lt;-<span class="st"> </span><span class="kw">map_dfr</span>(bandits, <span class="cf">function</span>(x) {
+  pb<span class="op">$</span><span class="kw">tick</span>()<span class="op">$</span><span class="kw">print</span>()
+  <span class="kw">simulate_bandit</span>(x, times)
+  <span class="kw">tibble</span>(
+    <span class="dt">epsilon =</span> x<span class="op">$</span>epsilon,
+    <span class="dt">gradient =</span> x<span class="op">$</span>gradient,
+    <span class="dt">initial =</span> x<span class="op">$</span>initial,
+    <span class="dt">step_size =</span> x<span class="op">$</span>step_size,
+    <span class="dt">UCB_param =</span> <span class="kw">if_else</span>(<span class="kw">is.null</span>(x<span class="op">$</span>UCB_param), <span class="ot">NA_real_</span>, x<span class="op">$</span>UCB_param),
+    <span class="dt">sample_averages =</span> x<span class="op">$</span>sample_averages,
+    <span class="dt">avg_reward =</span> x<span class="op">$</span>average_reward
+  )
+})</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sim_summary &lt;-<span class="st"> </span>sim_results <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">mutate</span>(
+    <span class="dt">method =</span> <span class="kw">if_else</span>(
+      <span class="op">!</span><span class="kw">is.na</span>(UCB_param), <span class="st">&quot;UCB&quot;</span>, <span class="kw">if_else</span>(
+        gradient, <span class="st">&quot;gradient bandit&quot;</span>, <span class="kw">if_else</span>(
+          sample_averages, <span class="st">&quot;epsilon-greedy&quot;</span>,
+          <span class="st">&quot;optimistic-greedy&quot;</span>
+        )
+      )
+    ),
+    <span class="dt">param =</span> <span class="kw">if_else</span>(
+      <span class="op">!</span><span class="kw">is.na</span>(UCB_param), UCB_param, <span class="kw">if_else</span>(
+        gradient, step_size, <span class="kw">if_else</span>(
+          sample_averages, epsilon,
+          initial
+        )
+      )
+    ),
+  ) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">group_by</span>(method, param) <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">summarize</span>(<span class="dt">avg_reward =</span> <span class="kw">mean</span>(avg_reward))</code></pre>
+<pre class="sourceCode r"><code class="sourceCode r">sim_summary <span class="op">%&gt;%</span>
+<span class="st">  </span><span class="kw">ggplot</span>(<span class="kw">aes</span>(<span class="dt">x =</span> <span class="kw">log2</span>(param), <span class="dt">y =</span> avg_reward)) <span class="op">+</span>
+<span class="st">  </span><span class="kw">geom_line</span>(<span class="kw">aes</span>(<span class="dt">color =</span> method))</code></pre>
+<p><img src="reinforcement-learning-an-introduction_files/figure-html/figure-2-6-plot-1.png" width="672" /></p>
+
+<div id="refs" class="references">
+<div>
+<p>Sutton, Richard S, and Andrew G Barto. 2018. <em>Reinforcement Learning: An Introduction</em>. MIT press.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+            </section>
+
+          </div>
+        </div>
+      </div>
+<a href="intro.html" class="navigation navigation-prev navigation-unique" aria-label="Previous page"><i class="fa fa-angle-left"></i></a>
+
+    </div>
+  </div>
+<script src="libs/gitbook-2.6.7/js/app.min.js"></script>
+<script src="libs/gitbook-2.6.7/js/lunr.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-search.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-sharing.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-fontsettings.js"></script>
+<script src="libs/gitbook-2.6.7/js/plugin-bookdown.js"></script>
+<script src="libs/gitbook-2.6.7/js/jquery.highlight.js"></script>
+<script>
+gitbook.require(["gitbook"], function(gitbook) {
+gitbook.start({
+"sharing": {
+"github": false,
+"facebook": true,
+"twitter": true,
+"google": false,
+"linkedin": false,
+"weibo": false,
+"instapaper": false,
+"vk": false,
+"all": ["facebook", "google", "twitter", "linkedin", "weibo", "instapaper"]
+},
+"fontsettings": {
+"theme": "white",
+"family": "sans",
+"size": 2
+},
+"edit": {
+"link": null,
+"text": null
+},
+"history": {
+"link": null,
+"text": null
+},
+"download": ["reinforcement-learning-an-introduction.pdf", "reinforcement-learning-an-introduction.epub"],
+"toc": {
+"collapse": "subsection"
+}
+});
+});
+</script>
+
+</body>
+
+</html>

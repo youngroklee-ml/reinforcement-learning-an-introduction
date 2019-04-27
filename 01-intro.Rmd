@@ -204,7 +204,6 @@ Judger <- R6Class("Judger", list(
             # debug
             # cat("current hash: ", as.character(current_state$hash()), "\n")
 
-            
             if (print_state) {
                 current_state$print_state()
             }
@@ -298,8 +297,11 @@ Player <- R6Class("Player", list(
         
         for (i in rev(seq_len(length(self$states) - 1))) {
             state <- self$states[i]
-            td_error <- self$greedy[[i]] * (self$estimations[self$states[i + 1]] - self$estimations[state])
-            self$estimations[state] <- self$estimations[state] + self$step_size * td_error
+            td_error <- self$greedy[[i]] * (
+                self$estimations[self$states[i + 1]] - 
+                    self$estimations[state])
+            self$estimations[state] <- self$estimations[state] + 
+                self$step_size * td_error
         }
     },
     # choose an action based on the state
@@ -314,7 +316,8 @@ Player <- R6Class("Player", list(
                 if (state$data[i, j] == 0L) {
                     ind <- length(next_positions) + 1
                     next_positions[[ind]] <- c(i, j)
-                    next_states[[ind]] <- state$next_state(i, j, self$symbol)$hash()
+                    next_states[[ind]] <- state$next_state(
+                        i, j, self$symbol)$hash()
                 }
             }
         }
